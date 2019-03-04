@@ -46,8 +46,11 @@ export class CityBot {
       [ActivityTypes.ConversationUpdate]: async () => {
         await this.welcomeUser(turnContext);
       },
+      default: () => {
+        throw 'Unknown activity type';
+      },
     };
-    await options[turnContext.activity.type]();
+    await (options[turnContext.activity.type] || options.default)();
     await this.saveChanges(turnContext);
   }
 
@@ -59,9 +62,7 @@ export class CityBot {
     if (dialogContext.context.activity.text) {
       await dialogContext.continueDialog();
     } else if (dialogContext.context.activity.value) {
-      await dialogContext.context.sendActivity(
-        dialogContext.context.activity.value.content,
-      );
+      await this.questionDialog.sendFile(dialogContext);
       await dialogContext.repromptDialog();
     }
 

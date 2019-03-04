@@ -111,6 +111,39 @@ const bot = new CityBot(conversationState, userState);
 
 // Create HTTP server
 const server = restify.createServer();
+
+// Listen for incoming activities and route them to your bot for processing.
+server.post('/api/messages', (req, res) => {
+  adapter.processActivity(req, res, async turnContext => {
+    // Call bot.onTurn() to handle all incoming messages.
+    await bot.onTurn(turnContext);
+  });
+});
+
+server.get('/api/messages', (req, res, next) => {
+  // Your verify token. Should be a random string.
+  const VERIFY_TOKEN = 'test';
+
+  // Parse the query params
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  // Checks if a token and mode is in the query string of the request
+  if (mode && token) {
+    // Checks the mode and token sent is correct
+    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+      // Responds with the challenge token from the request
+      console.log('WEBHOOK_VERIFIED');
+      res.send(200, challenge);
+    } else {
+      // Responds with '403 Forbidden' if verify tokens do not match
+      res.status(403);
+      next();
+    }
+  }
+});
+
 server.listen(process.env.port || process.env.PORT || 3978, () => {
   console.log(`\n${server.name} listening to ${server.url}`);
   console.log(
@@ -119,12 +152,4 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
   console.log(
     `\nTo talk to your bot, open echobot-with-counter.bot file in the Emulator.`,
   );
-});
-
-// Listen for incoming activities and route them to your bot for processing.
-server.post('/api/messages', (req, res) => {
-  adapter.processActivity(req, res, async (turnContext) => {
-    // Call bot.onTurn() to handle all incoming messages.
-    await bot.onTurn(turnContext);
-  });
 });

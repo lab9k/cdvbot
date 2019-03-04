@@ -21,6 +21,7 @@ import DocumentCard from '../models/DocumentCard';
 import QueryResponse from '../models/QueryResponse';
 import CorrectConceptPrompt from './CorrectConceptPrompt';
 import { ConfirmTypes } from '../models/ConfirmTypes';
+import { readFileSync } from 'fs';
 
 export default class QuestionDialog extends WaterfallDialog {
   public static readonly ID = 'question_dialog';
@@ -144,6 +145,29 @@ export default class QuestionDialog extends WaterfallDialog {
       await sctx.context.sendActivity(lang.getStringFor(lang.MORE_QUESTIONS));
     }
     await sctx.endDialog();
+  }
+
+  public async sendFile(dialogContext: DialogContext): Promise<any> {
+    const resourceUri: string = dialogContext.context.activity.value.content;
+    const filename = `${resourceUri.split('/').pop()}.pdf`;
+
+    await this.api.downloadFile(resourceUri, filename);
+
+    const filedata = readFileSync(`./downloads/${filename}`);
+    const base64file = Buffer.from(filedata).toString('base64');
+
+    const reply = {
+      type: ActivityTypes.Message,
+      attachments: [
+        {
+          name: filename,
+          contentUrl: `data:application/pdf;base64,${base64file}`,
+          contentType: 'application/pdf',
+        },
+      ],
+    };
+
+    return await dialogContext.context.sendActivity(reply);
   }
 
   private async waitFor(sctx: DialogContext, cb: Function): Promise<any> {

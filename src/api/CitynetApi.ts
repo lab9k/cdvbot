@@ -2,6 +2,7 @@ import axios from 'axios';
 import { stringify } from 'querystring';
 import * as moment from 'moment';
 import QueryResponse from '../models/QueryResponse';
+import * as download from 'download';
 
 export default class CitynetApi {
   token: { value: string; date: any };
@@ -63,5 +64,18 @@ export default class CitynetApi {
 
   private isTokenValid(): boolean {
     return moment(this.token.date).isAfter(moment().subtract(24, 'hours'));
+  }
+
+  public async downloadFile(
+    resourceUri: string,
+    filename: string,
+  ): Promise<Buffer> {
+    const options: download.DownloadOptions = {
+      filename,
+      headers: {
+        Authorization: `Bearer ${this.token.value}`,
+      },
+    };
+    return await download(resourceUri, './downloads', options);
   }
 }
