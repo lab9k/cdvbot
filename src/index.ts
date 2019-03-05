@@ -111,6 +111,7 @@ const bot = new CityBot(conversationState, userState);
 
 // Create HTTP server
 const server = restify.createServer();
+server.use(restify.plugins.queryParser());
 
 // Listen for incoming activities and route them to your bot for processing.
 server.post('/api/messages', (req, res) => {
@@ -123,8 +124,6 @@ server.post('/api/messages', (req, res) => {
 server.get('/api/messages', (req, res, next) => {
   // Your verify token. Should be a random string.
   const VERIFY_TOKEN = 'test';
-
-  console.log(JSON.stringify(req.query));
 
   // Parse the query params
   const mode = req.query['hub.mode'];
