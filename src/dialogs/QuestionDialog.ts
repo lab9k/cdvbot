@@ -61,6 +61,11 @@ export default class QuestionDialog extends WaterfallDialog {
     await this.docsAccessor.set(sctx.context, resolved);
 
     // ? ask if concept is correct
+    if (!resolved.conceptsOfQuery) {
+      console.log('no concepts, skipping question');
+      await sctx.next();
+      return await this.handleConcept(sctx, true);
+    }
 
     await this.waitFor(sctx, async () => {
       const formatConcepts = (conceptsArray: string[]) =>
@@ -75,15 +80,15 @@ export default class QuestionDialog extends WaterfallDialog {
       await sctx.prompt(CorrectConceptPrompt.ID, {
         prompt: lang
           .getStringFor(lang.ASK_CORRECT_CONCEPTS)
-          .replace('%1%', formatConcepts(resolved.conceptsOfQuery)),
+          .replace('%1%', formatConcepts(resolved.conceptsOfQuery || [])),
         retryPrompt: lang.getStringFor(lang.NOT_UNDERSTOOD_USE_BUTTONS),
       });
     });
   }
 
-  private async handleConcept(sctx: WaterfallStepContext) {
+  private async handleConcept(sctx: WaterfallStepContext, skipped?: boolean) {
     const answer = sctx.context.activity.text;
-    if (answer === ConfirmTypes.POSITIVE) {
+    if (answer === ConfirmTypes.POSITIVE || skipped) {
       const resolved: QueryResponse = await this.docsAccessor.get(sctx.context);
       const cards = map(
         sortBy(resolved.documents, 'scoreInPercent').reverse(),
