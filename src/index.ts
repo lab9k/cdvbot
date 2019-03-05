@@ -75,7 +75,6 @@ adapter.onTurnError = async (context, error) => {
   console.error(`\n [onTurnError]: ${error}`);
   console.log(error.stack);
   console.log(error.stack);
-  console.log(JSON.stringify(error['request']));
   console.log(JSON.stringify(error['response']));
 
   // Send a message to the user.

@@ -109,6 +109,7 @@ export default class QuestionDialog extends WaterfallDialog {
                 title: 'Download',
                 type: ActionTypes.ImBack,
                 value: { content: document.resourceURI },
+                channelData: { postback: { content: document.resourceURI } },
               },
             ],
           );
