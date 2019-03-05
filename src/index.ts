@@ -54,8 +54,8 @@ try {
 const DEV_ENVIRONMENT = 'development';
 
 // Define name of the endpoint configuration section from the .bot file.
-const BOT_CONFIGURATION = process.env.NODE_ENV || DEV_ENVIRONMENT;
-
+// const BOT_CONFIGURATION = process.env.NODE_ENV || DEV_ENVIRONMENT;
+const BOT_CONFIGURATION = DEV_ENVIRONMENT;
 // Get bot endpoint configuration by service name.
 // Bot configuration as defined in .bot file.
 const endpointConfig = botConfig.findServiceByNameOrId(
