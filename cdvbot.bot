@@ -1,15 +1,44 @@
 {
-  "name": "cdvbot",
-  "description": "",
-  "services": [
-    {
-      "type": "endpoint",
-      "endpoint": "http://localhost:3978/api/messages",
-      "id": "112",
-      "name": "development"
-    }
-  ],
-  "padlock": "",
-  "version": "2.0",
-  "overrides": null
+    "name": "cdvbot",
+    "description": "",
+    "services": [
+        {
+            "type": "abs",
+            "tenantId": "5cf7310e-091a-4bc5-acd7-26c721d4cccd",
+            "subscriptionId": "a55526ce-f602-4108-98ef-66baa29bfc89",
+            "resourceGroup": "cd-v",
+            "serviceName": "cdv-bot",
+            "name": "cdv-bot",
+            "id": "1",
+            "appId": "58d7c925-127c-4d08-bbc5-7018524773a3"
+        },
+        {
+            "type": "blob",
+            "connectionString": "i67KQU1s2iZM+D2rT7C2NA==!/Mig1Sf5KNGFou0mW4sRsOqvqYeR8h/7dZTe8HHZj11eWC3vEWn6Um33H7sqP7/9eV2UfF1x2NiWuyFeHt6SrZ98/c29Qm2o7ip3h9fFv74e6VDLBPHxrSYwkaT0/5Z+z6mhx9yCw2lwMo+ZwD1vU+SDt81ZXJDW9BON+O7CRSdRJyLC5+PL+UuS0ycS1EJbcBlH/afT/JgI9paX3EoDrA==",
+            "tenantId": "5cf7310e-091a-4bc5-acd7-26c721d4cccd",
+            "subscriptionId": "a55526ce-f602-4108-98ef-66baa29bfc89",
+            "resourceGroup": "cd-v",
+            "serviceName": "botstorageazure",
+            "id": "2"
+        },
+        {
+            "type": "endpoint",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3978/api/messages",
+            "name": "development",
+            "id": "3"
+        },
+        {
+            "type": "endpoint",
+            "appId": "58d7c925-127c-4d08-bbc5-7018524773a3",
+            "appPassword": "G0IL95MzTYDv3qwEABdhAA==!1RYQCNr3o/7nOCFImh0o8Vgd7hNo1H8drMFiCeBsMGU=",
+            "endpoint": "https://cdv-bot.azurewebsites.net/api/messages",
+            "name": "production",
+            "id": "4"
+        }
+    ],
+    "padlock": "CbHtphqRON7lE8oddpQUSw==!3bbP4nuIvbVXAOkBRP31bh+afboEspnOq+dDyLvrjIGqKL2TWvemZyID1FNp3WxA",
+    "version": "2.0",
+    "overrides": null
 }
