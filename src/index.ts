@@ -75,8 +75,8 @@ adapter.onTurnError = async (context, error) => {
   console.error(`\n [onTurnError]: ${error}`);
   console.log(error.stack);
   console.log(error.stack);
-  console.log(error['request']);
-  console.log(error['response']);
+  console.log(JSON.stringify(error['request']));
+  console.log(JSON.stringify(error['response']));
 
   // Send a message to the user.
   await context.sendActivity(`Oops. Something went wrong!`);
