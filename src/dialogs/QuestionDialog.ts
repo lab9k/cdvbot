@@ -10,6 +10,7 @@ import {
   CardFactory,
   UserState,
   StatePropertyAccessor,
+  ActionTypes,
 } from 'botbuilder';
 import CitynetApi from '../api/CitynetApi';
 import { FeedbackTypes } from '../models/FeedbackTypes';
@@ -98,9 +99,19 @@ export default class QuestionDialog extends WaterfallDialog {
           //   .addSummary(document)
           //   .addConfidenceLevel(document)
           //   .addAction(document);
-          return CardFactory.heroCard('Document', [], [], {
-            text: `${take(document.summary.split(' '), 50).join(' ')}...`,
-          });
+          return CardFactory.thumbnailCard(
+            'Document',
+            `${take(document.summary.split(' '), 50).join(' ')}...`,
+            [],
+            [
+              {
+                title: 'Download',
+                channelData: '',
+                type: ActionTypes.MessageBack,
+                value: { content: document.resourceURI },
+              },
+            ],
+          );
         },
       );
       await sctx.context.sendActivity(MessageFactory.carousel(cards));
