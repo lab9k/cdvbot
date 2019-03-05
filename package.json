@@ -5,7 +5,6 @@
   "scripts": {
     "build": "node_modules/.bin/tsc --build",
     "lint": "node_modules/.bin/tslint -c tslint.json 'src/**/*.ts'",
-    "postinstall": "npm run build",
     "start": "node ./lib/index.js",
     "debug": "node_modules/.bin/tsc --build && node  --inspect ./lib/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -1,0 +1,1 @@
+{"version":3,"file":"CorrectConceptPrompt.js","sourceRoot":"","sources":["../../src/dialogs/CorrectConceptPrompt.ts"],"names":[],"mappings":";;AAAA,2DAAmD;AACnD,yDAAsD;AAEtD,MAAqB,oBAAqB,SAAQ,kCAAa;IAE7D;QACE,KAAK,CAAC,oBAAoB,CAAC,EAAE,CAAC,CAAC;QAC/B,IAAI,CAAC,cAAc,GAAG,CAAC,2BAAY,CAAC,QAAQ,EAAE,2BAAY,CAAC,QAAQ,CAAC,CAAC;IACvE,CAAC;;AAJa,uBAAE,GAAG,wBAAwB,CAAC;AAD9C,uCAMC"}

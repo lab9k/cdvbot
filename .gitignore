@@ -61,7 +61,6 @@ typings/
 .next
 
 .vscode/
-lib/
 .DS_Store
 
 cdv-bot.bot
