@@ -154,4 +154,7 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
   console.log(
     `\nTo talk to your bot, open echobot-with-counter.bot file in the Emulator.`,
   );
+  console.log(`ENVIRONMENT:
+  BOT_CONFIGURATION: ${BOT_CONFIGURATION}
+  `);
 });
