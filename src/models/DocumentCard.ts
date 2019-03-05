@@ -1,4 +1,5 @@
 import { Document } from './QueryResponse';
+import { HeroCard, CardAction, CardImage } from 'botbuilder';
 import {
   AdaptiveCard,
   TextBlock,
@@ -8,44 +9,48 @@ import {
 } from 'adaptivecards';
 import { take } from 'lodash';
 import lang from '../lang';
-export default class DocumentCard {
-  private readonly internalCard: AdaptiveCard;
+export default class DocumentCard implements HeroCard {
+  title: string;
+  subtitle: string;
+  text: string;
+  images: CardImage[];
+  buttons: CardAction[];
+  tap: CardAction;
 
-  constructor() {
-    this.internalCard = new AdaptiveCard();
-  }
+  constructor() {}
 
   public addTitle(title: string = 'Document'): DocumentCard {
     const titleText = new TextBlock();
     titleText.size = TextSize.Large;
     titleText.text = title;
-    this.internalCard.addItem(titleText);
+    this.title = title;
     return this;
   }
   public addSummary(document: Document): DocumentCard {
     const summaryText = new TextBlock();
     summaryText.size = TextSize.Default;
-    summaryText.text = `${take(document.summary.split(' '), 50).join(' ')}...`;
-    this.internalCard.addItem(summaryText);
+    const text = `${take(document.summary.split(' '), 50).join(' ')}...`;
+    this.text = text;
     return this;
   }
   public addConfidenceLevel(document: Document): DocumentCard {
     const confidenceLevel = new TextBlock();
-    confidenceLevel.text = `Confidence: ${document.scoreInPercent}`;
+    const text = `Confidence: ${document.scoreInPercent}`;
+    confidenceLevel.text = text;
     confidenceLevel.size = TextSize.Small;
     confidenceLevel.color = this.getConfidenceColor(document.scoreInPercent);
-    this.internalCard.addItem(confidenceLevel);
+    this.text += `\n${text}`;
     return this;
   }
   public addAction(document: Document): DocumentCard {
     const action = new SubmitAction();
     action.data = { content: document.resourceURI };
     action.title = lang.getStringFor(lang.READ_MORE);
-    this.internalCard.addAction(action);
+    this.tap = null;
     return this;
   }
-  public get card(): AdaptiveCard {
-    return this.internalCard;
+  public get card() {
+    return this;
   }
 
   private getConfidenceColor(level: number): TextColor {

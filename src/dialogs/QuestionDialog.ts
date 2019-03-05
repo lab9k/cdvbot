@@ -13,7 +13,7 @@ import {
 } from 'botbuilder';
 import CitynetApi from '../api/CitynetApi';
 import { FeedbackTypes } from '../models/FeedbackTypes';
-import { map, sortBy } from 'lodash';
+import { map, sortBy, take } from 'lodash';
 import FeedbackPrompt from './FeedbackPrompt';
 import lang from '../lang';
 
@@ -93,12 +93,14 @@ export default class QuestionDialog extends WaterfallDialog {
       const cards = map(
         sortBy(resolved.documents, 'scoreInPercent').reverse(),
         document => {
-          const documentCard = new DocumentCard()
-            .addTitle()
-            .addSummary(document)
-            .addConfidenceLevel(document)
-            .addAction(document);
-          return CardFactory.adaptiveCard(documentCard.card);
+          // const documentCard = new DocumentCard()
+          //   .addTitle()
+          //   .addSummary(document)
+          //   .addConfidenceLevel(document)
+          //   .addAction(document);
+          return CardFactory.heroCard('Document', [], [], {
+            text: `${take(document.summary.split(' '), 50).join(' ')}...`,
+          });
         },
       );
       await sctx.context.sendActivity(MessageFactory.carousel(cards));
