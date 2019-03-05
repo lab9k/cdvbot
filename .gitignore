@@ -62,5 +62,6 @@ typings/
 
 .vscode/
 .DS_Store
+lib/
 
 cdv-bot.bot
