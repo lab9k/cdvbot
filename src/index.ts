@@ -124,6 +124,8 @@ server.get('/api/messages', (req, res, next) => {
   // Your verify token. Should be a random string.
   const VERIFY_TOKEN = 'test';
 
+  console.log(JSON.stringify(req.query));
+
   // Parse the query params
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
@@ -135,11 +137,12 @@ server.get('/api/messages', (req, res, next) => {
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
       // Responds with the challenge token from the request
       console.log('WEBHOOK_VERIFIED');
-      return res.send(200, challenge);
+      res.send(200, challenge);
+      next();
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match
       res.status(403);
-      return next();
+      next();
     }
   }
 });
