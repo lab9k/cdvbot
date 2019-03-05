@@ -136,7 +136,7 @@ server.get('/api/messages', (req, res, next) => {
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
       // Responds with the challenge token from the request
       console.log('WEBHOOK_VERIFIED');
-      res.send(200, challenge);
+      res.sendRaw(200, challenge);
       next();
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match
