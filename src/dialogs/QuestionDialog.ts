@@ -23,6 +23,7 @@ import QueryResponse from '../models/QueryResponse';
 import CorrectConceptPrompt from './CorrectConceptPrompt';
 import { ConfirmTypes } from '../models/ConfirmTypes';
 import { readFileSync } from 'fs';
+import { CardAction } from 'botframework-connector/lib/connectorApi/models/mappers';
 
 export default class QuestionDialog extends WaterfallDialog {
   public static readonly ID = 'question_dialog';
@@ -99,9 +100,9 @@ export default class QuestionDialog extends WaterfallDialog {
           //   .addSummary(document)
           //   .addConfidenceLevel(document)
           //   .addAction(document);
-          return CardFactory.thumbnailCard(
-            'Document',
-            `${take(document.summary.split(' '), 50).join(' ')}...`,
+
+          return CardFactory.heroCard(
+            'title',
             [],
             [
               {
