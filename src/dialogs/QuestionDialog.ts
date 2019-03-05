@@ -106,7 +106,6 @@ export default class QuestionDialog extends WaterfallDialog {
             [
               {
                 title: 'Download',
-                channelData: '',
                 type: ActionTypes.MessageBack,
                 value: { content: document.resourceURI },
               },
