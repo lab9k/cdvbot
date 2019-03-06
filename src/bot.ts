@@ -57,12 +57,27 @@ export class CityBot {
 
   private async handleDialog(turnContext: TurnContext) {
     const dialogContext = await this.dialogs.createContext(turnContext);
-
+    // ? continue the multistep dialog that's already begun
+    // ? won't do anything if there is no running dialog
     switch (turnContext.activity.channelId) {
       case ChannelId.Facebook:
-        console.log(
-          JSON.stringify(dialogContext.context.activity.channelData),
-        );
+        if (
+          checkNested(
+            dialogContext.context.activity.channelData,
+            'postback',
+            'payload',
+          )
+        ) {
+          // ? postback button clicked
+          const payload = JSON.parse(
+            dialogContext.context.activity.channelData.postback.payload,
+          );
+          await this.questionDialog.sendFile(dialogContext, payload);
+          await dialogContext.repromptDialog();
+        } else {
+          // ? message or quick reply
+          await dialogContext.continueDialog();
+        }
         await dialogContext.continueDialog();
         break;
       default:
@@ -75,19 +90,6 @@ export class CityBot {
         }
         break;
     }
-
-    // ? continue the multistep dialog that's already begun
-    // ? won't do anything if there is no running dialog
-    // if (
-    //   checkNested(
-    //     dialogContext.context.activity.channelData,
-    //     'message',
-    //     'quick_reply',
-    //     'payload',
-    //   )
-    // ) {
-
-    // }
 
     // ? if no outstanding dialog / no one responded
     if (!dialogContext.context.responded) {
