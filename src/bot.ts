@@ -10,6 +10,7 @@ import QuestionDialog from './dialogs/QuestionDialog';
 import FeedbackPrompt from './dialogs/FeedbackPrompt';
 import lang from './lang';
 import CorrectConceptPrompt from './dialogs/CorrectConceptPrompt';
+import { ChannelId } from './models/ChannelIds';
 
 const DIALOG_STATE_PROPERTY = 'dialog_state_prop';
 export class CityBot {
@@ -57,39 +58,36 @@ export class CityBot {
   private async handleDialog(turnContext: TurnContext) {
     const dialogContext = await this.dialogs.createContext(turnContext);
 
+    switch (turnContext.activity.channelId) {
+      case ChannelId.Facebook:
+        console.log(
+          JSON.stringify(dialogContext.context.activity.channelData.postback),
+        );
+        await dialogContext.continueDialog();
+        break;
+      default:
+        if (dialogContext.context.activity.value) {
+          const payload = dialogContext.context.activity.value;
+          await this.questionDialog.sendFile(dialogContext, payload);
+          await dialogContext.repromptDialog();
+        } else if (dialogContext.context.activity.text) {
+          await dialogContext.continueDialog();
+        }
+        break;
+    }
+
     // ? continue the multistep dialog that's already begun
     // ? won't do anything if there is no running dialog
-    if (
-      checkNested(
-        dialogContext.context.activity.channelData,
-        'message',
-        'quick_reply',
-        'payload',
-      ) ||
-      dialogContext.context.activity.value
-    ) {
-      const payload = checkNested(
-        dialogContext.context.activity.channelData,
-        'message',
-        'quick_reply',
-        'payload',
-      )
-        ? (() => {
-          console.log(
-              dialogContext.context.activity.channelData.message.quick_reply,
-            );
-          return JSON.parse(
-              dialogContext.context.activity.channelData.message.quick_reply
-                .payload,
-            );
-        })()
-        : dialogContext.context.activity.value;
+    // if (
+    //   checkNested(
+    //     dialogContext.context.activity.channelData,
+    //     'message',
+    //     'quick_reply',
+    //     'payload',
+    //   )
+    // ) {
 
-      await this.questionDialog.sendFile(dialogContext, payload);
-      await dialogContext.repromptDialog();
-    } else if (dialogContext.context.activity.text) {
-      await dialogContext.continueDialog();
-    }
+    // }
 
     // ? if no outstanding dialog / no one responded
     if (!dialogContext.context.responded) {
