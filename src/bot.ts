@@ -61,7 +61,7 @@ export class CityBot {
     switch (turnContext.activity.channelId) {
       case ChannelId.Facebook:
         console.log(
-          JSON.stringify(dialogContext.context.activity.channelData.postback),
+          JSON.stringify(dialogContext.context.activity.channelData),
         );
         await dialogContext.continueDialog();
         break;
