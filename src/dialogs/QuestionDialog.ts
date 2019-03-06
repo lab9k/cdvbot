@@ -102,12 +102,12 @@ export default class QuestionDialog extends WaterfallDialog {
               {
                 type: 'postback',
                 title: 'Download',
-                payload: { content: doc.resourceURI },
+                payload: JSON.stringify({ content: doc.resourceURI }),
               },
               {
                 type: 'postback',
                 title: 'Download pdf',
-                payload: { content: doc.resourceURI },
+                payload: JSON.stringify({ content: doc.resourceURI }),
               },
             ),
           ),
