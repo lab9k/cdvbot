@@ -113,7 +113,12 @@ export default class QuestionDialog extends WaterfallDialog {
           );
         },
       );
-      await sctx.context.sendActivity(MessageFactory.carousel(cards));
+      if (sctx.context.activity.channelId === ChannelId.Facebook) {
+        await sctx.context.sendActivities(cards);
+      } else {
+        await sctx.context.sendActivity(MessageFactory.carousel(cards));
+      }
+
       await this.waitFor(sctx, async () => {
         await sctx.prompt(FeedbackPrompt.ID, {
           prompt: lang.getStringFor(lang.USEFULLNESS_QUERY),
