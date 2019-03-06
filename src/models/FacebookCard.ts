@@ -1,40 +1,62 @@
 import { Document } from './QueryResponse';
 import { take } from 'lodash';
-export default class FacebookCard {
-  constructor(private document: Document) {}
-  public getData(): any {
-    return {
+
+interface FacebookData {
+  channelData: {
+    attachment: {
+      type: string;
+      payload: { template_type: string; elements: any[] };
+    };
+  };
+}
+
+export class FacebookCardBuilder {
+  private data: FacebookData;
+  constructor() {
+    this.data = {
       channelData: {
         attachment: {
           type: 'template',
           payload: {
             template_type: 'generic',
-            elements: [
-              {
-                title: 'Document',
-                subtitle: `${take(this.document.summary.split(' '), 50).join(
-                  ' ',
-                )}...`,
-                image_url:
-                  'https://static01.nyt.com/images/2019/02/10/travel/03updat' +
-                  'e-snowfall2/03update-snowfall2-jumbo.jpg?quality=90&auto=webp',
-                default_action: {
-                  type: 'web_url',
-                  url:
-                    'https://www.nytimes.com/2019/02/08/travel/ski-resort-snow-conditions.html',
-                  messenger_extensions: false,
-                  webview_height_ratio: 'tall',
-                },
-                buttons: [
-                  {
-                    type: 'element_share',
-                  },
-                ],
-              },
-            ],
+            elements: [],
           },
         },
       },
+    };
+  }
+
+  public addCard(card: FacebookCard) {
+    this.data.channelData.attachment.payload.elements.push(card.getCard());
+  }
+
+  public getData(): any {
+    return this.data;
+  }
+}
+
+interface DefaultAction {
+  type: string;
+  title: string;
+  payload: any;
+}
+
+export class FacebookCard {
+  private buttons: DefaultAction[];
+  constructor(
+    private title: string,
+    private subtitle: string,
+    private defaultAction: DefaultAction,
+    ...buttons: DefaultAction[]
+  ) {
+    this.buttons = buttons;
+  }
+  getCard() {
+    return {
+      title: this.title,
+      subtitle: this.subtitle,
+      default_action: this.defaultAction,
+      buttons: this.buttons,
     };
   }
 }

@@ -23,8 +23,7 @@ import CorrectConceptPrompt from './CorrectConceptPrompt';
 import { ConfirmTypes } from '../models/ConfirmTypes';
 import { readFileSync } from 'fs';
 import { ChannelId } from '../models/ChannelIds';
-import FacebookCard from '../models/FacebookCard';
-import { CardAction } from 'botframework-connector/lib/connectorApi/models/mappers';
+import { FacebookCardBuilder, FacebookCard } from '../models/FacebookCard';
 
 export default class QuestionDialog extends WaterfallDialog {
   public static readonly ID = 'question_dialog';
@@ -93,32 +92,47 @@ export default class QuestionDialog extends WaterfallDialog {
     const answer = sctx.context.activity.text;
     if (answer === ConfirmTypes.POSITIVE || skipped) {
       const resolved: QueryResponse = await this.docsAccessor.get(sctx.context);
-      const cards = map(
-        sortBy(resolved.documents, 'scoreInPercent').reverse(),
-        document => {
-          if (sctx.context.activity.channelId === ChannelId.Facebook) {
-            return new FacebookCard(document).getData();
-          }
-          return CardFactory.heroCard(
-            'title',
-            'text',
-            [],
-            [
-              {
-                value: { content: document.resourceURI },
-                type: ActionTypes.ImBack,
-                title: 'title of doc',
-              },
-            ],
-          );
-        },
-      );
       if (sctx.context.activity.channelId === ChannelId.Facebook) {
-        await sctx.context.sendActivities(cards);
+        const cardBuilder = new FacebookCardBuilder();
+        resolved.documents.forEach((doc, i) =>
+          cardBuilder.addCard(
+            new FacebookCard(
+              `Document ${i}`,
+              `${take(doc.summary.split(' '), 50).join(' ')}...`,
+              {
+                type: 'postback',
+                title: 'Download',
+                payload: { content: doc.resourceURI },
+              },
+              {
+                type: 'postback',
+                title: 'Download pdf',
+                payload: { content: doc.resourceURI },
+              },
+            ),
+          ),
+        );
+        await sctx.context.sendActivity(cardBuilder.getData());
       } else {
+        const cards = map(
+          sortBy(resolved.documents, 'scoreInPercent').reverse(),
+          document => {
+            return CardFactory.heroCard(
+              'title',
+              'text',
+              [],
+              [
+                {
+                  value: { content: document.resourceURI },
+                  type: ActionTypes.ImBack,
+                  title: 'title of doc',
+                },
+              ],
+            );
+          },
+        );
         await sctx.context.sendActivity(MessageFactory.carousel(cards));
       }
-
       await this.waitFor(sctx, async () => {
         await sctx.prompt(FeedbackPrompt.ID, {
           prompt: lang.getStringFor(lang.USEFULLNESS_QUERY),
