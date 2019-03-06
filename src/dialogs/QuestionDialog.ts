@@ -2,7 +2,6 @@ import {
   WaterfallDialog,
   WaterfallStepContext,
   DialogContext,
-  DialogReason,
 } from 'botbuilder-dialogs';
 import {
   MessageFactory,

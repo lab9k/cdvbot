@@ -74,6 +74,7 @@ export default class CitynetApi {
       filename,
       headers: {
         Authorization: `Bearer ${this.token.value}`,
+        Accept: 'application/pdf',
       },
     };
     return await download(resourceUri, './downloads', options);
