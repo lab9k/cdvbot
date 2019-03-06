@@ -100,48 +100,84 @@ export default class QuestionDialog extends WaterfallDialog {
           //   .addSummary(document)
           //   .addConfidenceLevel(document)
           //   .addAction(document);
-
-          return CardFactory.heroCard(
-            'document',
-            [],
-            [
-              {
-                title: 'Download',
-                type: ActionTypes.ImBack,
-                value: { content: document.resourceURI },
-                channelData: {
-                  facebook: {
-                    // format according to channel's requirements
-                    // (in our case, the above JSON required by Facebook)
-                    attachment: {
-                      type: 'template',
-                      payload: {
-                        template_type: 'generic',
-                        elements: [
-                          {
-                            title: 'Microsoft Bot Framework',
-                            subtitle: 'Check it out!',
-                            buttons: [
-                              {
-                                type: 'web_url',
-                                url: 'https://dev.botframework.com/',
-                                title: 'Go to Dev Portal',
-                              },
-                              {
-                                // this is our share button
-                                type: 'element_share',
-                              },
-                            ],
-                          },
-                        ],
+          return {
+            channelData: {
+              attachment: {
+                type: 'template',
+                payload: {
+                  template_type: 'generic',
+                  elements: [
+                    {
+                      title: 'Three Strategies for Finding Snow',
+                      subtitle:
+                        'How do you plan a ski trip to ensure the best conditions? ' +
+                        'You can think about a resort’s track record,' +
+                        ' or which have the best snow-making' +
+                        ' machines. Or you can gamble.',
+                      image_url:
+                        'https://static01.nyt.com/images/2019/02/10/travel/' +
+                        '03update-snowfall2/03update-snowfall2-jumbo.jpg?quality=90&auto=webp',
+                      default_action: {
+                        type: 'web_url',
+                        url:
+                          'https://www.nytimes.com/2019/02/08' +
+                          '/travel/ski-resort-snow-conditions.html',
+                        messenger_extensions: false,
+                        webview_height_ratio: 'tall',
                       },
-                    }, // end of attachment
-                  },
+                      buttons: [
+                        {
+                          type: 'element_share',
+                        },
+                      ],
+                    },
+                  ],
                 },
-                // postback: { content: document.resourceURI }
               },
-            ],
-          );
+            },
+          };
+          // return CardFactory.heroCard(
+          //   'document',
+          //   [],
+          //   [
+          //     {
+          //       title: 'Download',
+          //       type: ActionTypes.ImBack,
+          //       value: { content: document.resourceURI },
+          //       channelData: {
+          //         facebook: {
+          //           // format according to channel's requirements
+          //           // (in our case, the above JSON required by Facebook)
+          //           attachment: {
+          //             type: 'template',
+          //             payload: {
+          //               template_type: 'generic',
+          //               elements: [
+          //                 {
+          //                   title: 'Microsoft Bot Framework',
+          //                   subtitle: 'Check it out!',
+          //                   buttons: [
+          //                     {
+          //                       type: 'web_url',
+          //                       url: 'https://dev.botframework.com/',
+          //                       title: 'Go to Dev Portal',
+          //                     },
+          //                     {
+          //                       // this is our share button
+          //                       type: 'element_share',
+          //                     },
+          //                   ],
+          //                 },
+          //               ],
+          //             },
+          //           }, // end of attachment
+          //         },
+          //       },
+          //       // postback: { content: document.resourceURI }
+          //     },
+          //   ],
+          // );
+          return;
         },
       );
       await sctx.context.sendActivity(MessageFactory.carousel(cards));
