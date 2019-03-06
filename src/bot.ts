@@ -68,7 +68,19 @@ export class CityBot {
       ) ||
       dialogContext.context.activity.value
     ) {
-      await this.questionDialog.sendFile(dialogContext);
+      const payload = checkNested(
+        dialogContext.context.activity.channelData,
+        'message',
+        'quick_reply',
+        'payload',
+      )
+        ? JSON.parse(
+            dialogContext.context.activity.channelData.message.quick_reply
+              .payload,
+          )
+        : dialogContext.context.activity.value;
+
+      await this.questionDialog.sendFile(dialogContext, payload);
       await dialogContext.repromptDialog();
     } else if (dialogContext.context.activity.text) {
       await dialogContext.continueDialog();

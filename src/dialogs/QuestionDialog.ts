@@ -178,8 +178,11 @@ export default class QuestionDialog extends WaterfallDialog {
     await sctx.endDialog();
   }
 
-  public async sendFile(dialogContext: DialogContext): Promise<any> {
-    const resourceUri: string = dialogContext.context.activity.value.content;
+  public async sendFile(
+    dialogContext: DialogContext,
+    payload: { content: string },
+  ): Promise<any> {
+    const resourceUri: string = payload.content;
     const filename = `${resourceUri.split('/').pop()}.pdf`;
 
     await this.api.downloadFile(resourceUri, filename);
