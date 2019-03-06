@@ -18,11 +18,12 @@ import { map, sortBy, take } from 'lodash';
 import FeedbackPrompt from './FeedbackPrompt';
 import lang from '../lang';
 
-import DocumentCard from '../models/DocumentCard';
 import QueryResponse from '../models/QueryResponse';
 import CorrectConceptPrompt from './CorrectConceptPrompt';
 import { ConfirmTypes } from '../models/ConfirmTypes';
 import { readFileSync } from 'fs';
+import { ChannelId } from '../models/ChannelIds';
+import FacebookCard from '../models/FacebookCard';
 import { CardAction } from 'botframework-connector/lib/connectorApi/models/mappers';
 
 export default class QuestionDialog extends WaterfallDialog {
@@ -95,89 +96,21 @@ export default class QuestionDialog extends WaterfallDialog {
       const cards = map(
         sortBy(resolved.documents, 'scoreInPercent').reverse(),
         document => {
-          // const documentCard = new DocumentCard()
-          //   .addTitle()
-          //   .addSummary(document)
-          //   .addConfidenceLevel(document)
-          //   .addAction(document);
-          return {
-            channelData: {
-              attachment: {
-                type: 'template',
-                payload: {
-                  template_type: 'generic',
-                  elements: [
-                    {
-                      title: 'Three Strategies for Finding Snow',
-                      subtitle:
-                        'How do you plan a ski trip to ensure the best conditions? ' +
-                        'You can think about a resort’s track record,' +
-                        ' or which have the best snow-making' +
-                        ' machines. Or you can gamble.',
-                      image_url:
-                        'https://static01.nyt.com/images/2019/02/10/travel/' +
-                        '03update-snowfall2/03update-snowfall2-jumbo.jpg?quality=90&auto=webp',
-                      default_action: {
-                        type: 'web_url',
-                        url:
-                          'https://www.nytimes.com/2019/02/08' +
-                          '/travel/ski-resort-snow-conditions.html',
-                        messenger_extensions: false,
-                        webview_height_ratio: 'tall',
-                      },
-                      buttons: [
-                        {
-                          type: 'element_share',
-                        },
-                      ],
-                    },
-                  ],
-                },
+          if (sctx.context.activity.channelId === ChannelId.Facebook) {
+            return new FacebookCard(document).getData();
+          }
+          return CardFactory.heroCard(
+            'title',
+            'text',
+            [],
+            [
+              {
+                value: { content: document.resourceURI },
+                type: ActionTypes.ImBack,
+                title: 'title of doc',
               },
-            },
-          };
-          // return CardFactory.heroCard(
-          //   'document',
-          //   [],
-          //   [
-          //     {
-          //       title: 'Download',
-          //       type: ActionTypes.ImBack,
-          //       value: { content: document.resourceURI },
-          //       channelData: {
-          //         facebook: {
-          //           // format according to channel's requirements
-          //           // (in our case, the above JSON required by Facebook)
-          //           attachment: {
-          //             type: 'template',
-          //             payload: {
-          //               template_type: 'generic',
-          //               elements: [
-          //                 {
-          //                   title: 'Microsoft Bot Framework',
-          //                   subtitle: 'Check it out!',
-          //                   buttons: [
-          //                     {
-          //                       type: 'web_url',
-          //                       url: 'https://dev.botframework.com/',
-          //                       title: 'Go to Dev Portal',
-          //                     },
-          //                     {
-          //                       // this is our share button
-          //                       type: 'element_share',
-          //                     },
-          //                   ],
-          //                 },
-          //               ],
-          //             },
-          //           }, // end of attachment
-          //         },
-          //       },
-          //       // postback: { content: document.resourceURI }
-          //     },
-          //   ],
-          // );
-          return;
+            ],
+          );
         },
       );
       await sctx.context.sendActivity(MessageFactory.carousel(cards));
