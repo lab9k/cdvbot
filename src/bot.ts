@@ -76,8 +76,7 @@ export class CityBot {
       )
         ? (() => {
           console.log(
-              dialogContext.context.activity.channelData.message.quick_reply
-                .payload,
+              dialogContext.context.activity.channelData.message.quick_reply,
             );
           return JSON.parse(
               dialogContext.context.activity.channelData.message.quick_reply
