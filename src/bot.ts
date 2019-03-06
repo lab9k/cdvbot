@@ -74,10 +74,16 @@ export class CityBot {
         'quick_reply',
         'payload',
       )
-        ? JSON.parse(
-            dialogContext.context.activity.channelData.message.quick_reply
-              .payload,
-          )
+        ? (() => {
+          console.log(
+              dialogContext.context.activity.channelData.message.quick_reply
+                .payload,
+            );
+          return JSON.parse(
+              dialogContext.context.activity.channelData.message.quick_reply
+                .payload,
+            );
+        })()
         : dialogContext.context.activity.value;
 
       await this.questionDialog.sendFile(dialogContext, payload);
