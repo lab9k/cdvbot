@@ -101,11 +101,6 @@ export default class QuestionDialog extends WaterfallDialog {
               `${take(doc.summary.split(' '), 50).join(' ')}...`,
               {
                 type: 'postback',
-                title: 'Download',
-                payload: JSON.stringify({ content: doc.resourceURI }),
-              },
-              {
-                type: 'postback',
                 title: 'Download pdf',
                 payload: JSON.stringify({ content: doc.resourceURI }),
               },

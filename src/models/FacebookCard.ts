@@ -46,7 +46,6 @@ export class FacebookCard {
   constructor(
     private title: string,
     private subtitle: string,
-    private defaultAction: DefaultAction,
     ...buttons: DefaultAction[]
   ) {
     this.buttons = buttons;
@@ -55,7 +54,6 @@ export class FacebookCard {
     return {
       title: this.title,
       subtitle: this.subtitle,
-      default_action: this.defaultAction,
       buttons: this.buttons,
     };
   }
