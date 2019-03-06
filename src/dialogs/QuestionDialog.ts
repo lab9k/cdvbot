@@ -182,7 +182,7 @@ export default class QuestionDialog extends WaterfallDialog {
     payload: { content: string },
   ): Promise<any> {
     const resourceUri: string = payload.content;
-    const filename = `${resourceUri.split('/').pop()}.pdf`;
+    const filename = `${resourceUri.split('/').pop()}.txt`;
 
     await this.api.downloadFile(resourceUri, filename);
 
@@ -194,8 +194,8 @@ export default class QuestionDialog extends WaterfallDialog {
       attachments: [
         {
           name: filename,
-          contentUrl: `data:application/pdf;base64,${base64file}`,
-          contentType: 'application/pdf',
+          contentUrl: `data:text/plain;base64,${base64file}`,
+          contentType: 'text/plain',
         },
       ],
     };
