@@ -47,7 +47,7 @@ export class CityBot {
         await this.welcomeUser(turnContext);
       },
       default: () => {
-        throw 'Unknown activity type';
+        console.log('Unknown activity type, not an error');
       },
     };
     await (options[turnContext.activity.type] || options.default)();
@@ -59,11 +59,19 @@ export class CityBot {
 
     // ? continue the multistep dialog that's already begun
     // ? won't do anything if there is no running dialog
-    if (dialogContext.context.activity.text) {
-      await dialogContext.continueDialog();
-    } else if (dialogContext.context.activity.value) {
+    if (
+      checkNested(
+        dialogContext.context.activity.channelData,
+        'message',
+        'quick_reply',
+        'payload',
+      ) ||
+      dialogContext.context.activity.value
+    ) {
       await this.questionDialog.sendFile(dialogContext);
       await dialogContext.repromptDialog();
+    } else if (dialogContext.context.activity.text) {
+      await dialogContext.continueDialog();
     }
 
     // ? if no outstanding dialog / no one responded
@@ -95,4 +103,15 @@ export class CityBot {
     await this.userState.saveChanges(tc);
     await this.conversationState.saveChanges(tc);
   }
+}
+
+function checkNested(obj: any, ...levels: string[]) {
+  for (let i = 0; i < levels.length; i += 1) {
+    if (!obj || !obj.hasOwnProperty(levels[i])) {
+      return false;
+    }
+    // tslint:disable-next-line:no-parameter-reassignment
+    obj = obj[levels[i]];
+  }
+  return true;
 }
