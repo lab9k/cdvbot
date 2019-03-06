@@ -102,7 +102,7 @@ export default class QuestionDialog extends WaterfallDialog {
           //   .addAction(document);
 
           return CardFactory.heroCard(
-            'title',
+            'document',
             [],
             [
               {
@@ -110,10 +110,32 @@ export default class QuestionDialog extends WaterfallDialog {
                 type: ActionTypes.ImBack,
                 value: { content: document.resourceURI },
                 channelData: {
-                  messaging_type: 'RESPONSE',
-                  attachment: {
-                    type: 'template',
-                    payload: { content: document.resourceURI },
+                  facebook: {
+                    // format according to channel's requirements
+                    // (in our case, the above JSON required by Facebook)
+                    attachment: {
+                      type: 'template',
+                      payload: {
+                        template_type: 'generic',
+                        elements: [
+                          {
+                            title: 'Microsoft Bot Framework',
+                            subtitle: 'Check it out!',
+                            buttons: [
+                              {
+                                type: 'web_url',
+                                url: 'https://dev.botframework.com/',
+                                title: 'Go to Dev Portal',
+                              },
+                              {
+                                // this is our share button
+                                type: 'element_share',
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    }, // end of attachment
                   },
                 },
                 // postback: { content: document.resourceURI }
