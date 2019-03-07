@@ -19,8 +19,8 @@ export default new class {
   private options = {
     [this.WELCOME]: [
       `Hallo!
-      Ik ben een bot, mij kan je verschillende vragen stellen over e-besluitvorming in Gent.`,
-      `Ik ben een bot die je vragen kan stellen over e-besluitvorming in Gent`,
+      Ik ben een bot, mij kan je verschillende vragen stellen over het cd&v verkiezingsprogramma!`,
+      `Ik ben een bot die je vragen kan stellen over het cd&v verkiezingsprogramma!`,
     ],
     [this.WAIT_WHILE_FETCH]: [
       `Even geduld terwijl ik de juiste documenten zoek.`,

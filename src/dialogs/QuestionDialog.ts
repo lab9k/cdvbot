@@ -118,7 +118,7 @@ export default class QuestionDialog extends WaterfallDialog {
               [
                 {
                   value: { content: document.resourceURI },
-                  type: ActionTypes.ImBack,
+                  type: ActionTypes.PostBack,
                   title: 'title of doc',
                 },
               ],
@@ -182,20 +182,20 @@ export default class QuestionDialog extends WaterfallDialog {
     payload: { content: string },
   ): Promise<any> {
     const resourceUri: string = payload.content;
-    const filename = `${resourceUri.split('/').pop()}.txt`;
 
-    await this.api.downloadFile(resourceUri, filename);
+    console.log('downloading');
+    const ret = await this.api.downloadFile(resourceUri);
 
-    const filedata = readFileSync(`./downloads/${filename}`);
+    const filedata = readFileSync(`./downloads/${ret.filename}`);
     const base64file = Buffer.from(filedata).toString('base64');
 
     const reply = {
       type: ActivityTypes.Message,
       attachments: [
         {
-          name: filename,
-          contentUrl: `data:text/plain;base64,${base64file}`,
-          contentType: 'text/plain',
+          name: ret.filename,
+          contentUrl: `data:${ret.contentType};base64,${base64file}`,
+          contentType: ret.contentType,
         },
       ],
     };

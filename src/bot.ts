@@ -82,6 +82,7 @@ export class CityBot {
         break;
       default:
         if (dialogContext.context.activity.value) {
+          console.log('detected button click');
           const payload = dialogContext.context.activity.value;
           await this.questionDialog.sendFile(dialogContext, payload);
           await dialogContext.repromptDialog();
