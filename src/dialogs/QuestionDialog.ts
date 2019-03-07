@@ -207,17 +207,28 @@ export default class QuestionDialog extends WaterfallDialog {
       return nodeFetch('http://file.io/?expires=1d', { method: 'POST' })
         .then(async res => res.json())
         .then(async res => {
-          return await dialogContext.context.sendActivity({
-            channelData: {
-              attachment: {
-                type: 'file',
-                payload: {
-                  url: res.link,
-                  is_reusable: false,
-                },
+          // return await dialogContext.context.sendActivity({
+          //   channelData: {
+          //     attachment: {
+          //       type: 'file',
+          //       payload: {
+          //         url: res.link,
+          //         is_reusable: false,
+          //       },
+          //     },
+          //   },
+          // });
+          const reply = {
+            type: ActivityTypes.Message,
+            attachments: [
+              {
+                name: ret.filename,
+                contentUrl: res.link,
+                contentType: ret.contentType,
               },
-            },
-          });
+            ],
+          };
+          return await dialogContext.context.sendActivity(reply);
         });
     }
     const reply = {
