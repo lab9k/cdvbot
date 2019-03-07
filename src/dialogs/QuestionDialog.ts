@@ -204,8 +204,14 @@ export default class QuestionDialog extends WaterfallDialog {
       );
       console.log(filePath);
       const fd = new FormData();
-      fd.append('file', createReadStream(filePath), { filename: ret.filename });
-      return nodeFetch('http://file.io/?expires=1d', { method: 'POST' })
+      fd.append('file', ret.buffer, {
+        filename: ret.filename,
+        contentType: ret.contentType,
+      });
+      return nodeFetch('http://file.io/?expires=1d', {
+        method: 'POST',
+        body: fd,
+      })
         .then(async res => res.json())
         .then(async res => {
           console.log(res);
