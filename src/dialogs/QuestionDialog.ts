@@ -196,7 +196,9 @@ export default class QuestionDialog extends WaterfallDialog {
           attachment: {
             type: 'image',
             payload: {
-              url: 'http://www.messenger-rocks.com/image.jpg',
+              url:
+                'https://previews.123rf.com/images/fordzolo/fordzolo1506' +
+                '/fordzolo150600296/41026708-example-white-stamp-text-on-red-backgroud.jpg',
               is_reusable: true,
             },
           },
