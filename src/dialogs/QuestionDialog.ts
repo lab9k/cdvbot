@@ -10,6 +10,7 @@ import {
   UserState,
   StatePropertyAccessor,
   ActionTypes,
+  Activity,
 } from 'botbuilder';
 import CitynetApi from '../api/CitynetApi';
 import { FeedbackTypes } from '../models/FeedbackTypes';
@@ -218,13 +219,16 @@ export default class QuestionDialog extends WaterfallDialog {
           //     },
           //   },
           // });
-          const reply = {
+          console.log('res.link : ', res.link);
+          const reply: Partial<Activity> = {
             type: ActivityTypes.Message,
             attachments: [
               {
                 name: ret.filename,
                 contentUrl: res.link,
                 contentType: ret.contentType,
+                thumbnailUrl:
+                  'https://stad.gent/sites/all/themes/contrib/gent_base/img/png/logo--part1.png',
               },
             ],
           };
