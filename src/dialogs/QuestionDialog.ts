@@ -92,9 +92,9 @@ export default class QuestionDialog extends WaterfallDialog {
     if (answer === ConfirmTypes.POSITIVE || skipped) {
       const resolved: QueryResponse = await this.docsAccessor.get(sctx.context);
       if (sctx.context.activity.channelId === ChannelId.Facebook) {
-        const cardBuilder = new FacebookCardBuilder();
+        const fbCardBuilder = new FacebookCardBuilder();
         resolved.documents.forEach((doc, i) =>
-          cardBuilder.addCard(
+          fbCardBuilder.addCard(
             new FacebookCard(
               `Document ${i}`,
               `${take(doc.summary.split(' '), 50).join(' ')}...`,
@@ -106,7 +106,7 @@ export default class QuestionDialog extends WaterfallDialog {
             ),
           ),
         );
-        await sctx.context.sendActivity(cardBuilder.getData());
+        await sctx.context.sendActivity(fbCardBuilder.getData());
       } else {
         const cards = map(
           sortBy(resolved.documents, 'scoreInPercent').reverse(),
@@ -189,6 +189,22 @@ export default class QuestionDialog extends WaterfallDialog {
     const filedata = readFileSync(`./downloads/${ret.filename}`);
     const base64file = Buffer.from(filedata).toString('base64');
 
+    // TODO: split fb and other channels
+    if (dialogContext.context.activity.channelId === ChannelId.Facebook) {
+      return await dialogContext.context.sendActivity({
+        channelData: {
+          message: {
+            attachment: {
+              type: 'file',
+              payload: {
+                url: `data:${ret.contentType};base64,${base64file}`,
+                is_reusable: true,
+              },
+            },
+          },
+        },
+      });
+    }
     const reply = {
       type: ActivityTypes.Message,
       attachments: [
