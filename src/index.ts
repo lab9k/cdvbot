@@ -152,6 +152,13 @@ server.get('/api/messages', (req, res, next) => {
   }
 });
 
+server.get(
+  '/static/*',
+  restify.plugins.serveStatic({
+    directory: path.resolve(__dirname, '..', 'downloads'),
+  }),
+);
+
 server.listen(process.env.port || process.env.PORT || 3978, () => {
   console.log(`\n${server.name} listening to ${server.url}`);
   console.log(

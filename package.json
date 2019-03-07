@@ -19,6 +19,7 @@
     "botframework-config": "^4.3.2",
     "dotenv": "^6.2.0",
     "download": "^7.1.0",
+    "form-data": "^2.3.3",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "node-fetch": "^2.3.0",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/dotenv": "^6.1.0",
     "@types/download": "^6.2.4",
+    "@types/form-data": "^2.2.1",
     "@types/lodash": "^4.14.122",
     "@types/node-fetch": "^2.1.6",
     "@types/restify": "^7.2.8",
