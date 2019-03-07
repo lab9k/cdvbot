@@ -209,9 +209,11 @@ export default class QuestionDialog extends WaterfallDialog {
         .then(async res => res.json())
         .then(async res => {
           await dialogContext.context.sendActivity(
-            'Je kan de file downloaden op de volgende pagina',
+            'Ik stuur je de downloadlink onmiddelijk door.',
           );
-          return await dialogContext.context.sendActivity(`${res.link}`);
+          return this.waitFor(dialogContext, async () => {
+            return await dialogContext.context.sendActivity(`${res.link}`);
+          });
         });
     }
     const reply = {
