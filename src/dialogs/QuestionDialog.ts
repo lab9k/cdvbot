@@ -213,7 +213,7 @@ export default class QuestionDialog extends WaterfallDialog {
                 type: 'file',
                 payload: {
                   url: res.link,
-                  is_reusable: true,
+                  is_reusable: false,
                 },
               },
             },
