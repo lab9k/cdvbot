@@ -20,9 +20,11 @@ import lang from '../lang';
 import QueryResponse from '../models/QueryResponse';
 import CorrectConceptPrompt from './CorrectConceptPrompt';
 import { ConfirmTypes } from '../models/ConfirmTypes';
-import { readFileSync } from 'fs';
+import { readFileSync, createReadStream } from 'fs';
 import { ChannelId } from '../models/ChannelIds';
 import { FacebookCardBuilder, FacebookCard } from '../models/FacebookCard';
+import axios from 'axios';
+import { stringify } from 'querystring';
 
 export default class QuestionDialog extends WaterfallDialog {
   public static readonly ID = 'question_dialog';
@@ -191,12 +193,17 @@ export default class QuestionDialog extends WaterfallDialog {
 
     // TODO: split fb and other channels
     if (dialogContext.context.activity.channelId === ChannelId.Facebook) {
+      const onlineFile = await axios.post(
+        'https://file.io',
+        new FormData().append('file', `@./downloads/${ret.filename}`),
+        { params: { expires: '1' } },
+      );
       return await dialogContext.context.sendActivity({
         channelData: {
           attachment: {
             type: 'file',
             payload: {
-              url: `data:${ret.contentType};base64,${base64file}`,
+              url: onlineFile.data.link,
               is_reusable: true,
             },
           },
