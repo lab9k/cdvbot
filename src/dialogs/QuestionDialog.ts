@@ -203,7 +203,7 @@ export default class QuestionDialog extends WaterfallDialog {
     if (dialogContext.context.activity.channelId === ChannelId.Facebook) {
       const fd = new FormData();
 
-      fd.append('file', createReadStream(filePath));
+      fd.append('file', createReadStream(filePath), { filename: ret.filename });
       return nodeFetch('http://file.io/?expires=1d', { method: 'POST' })
         .then(async res => res.json())
         .then(async res => {
