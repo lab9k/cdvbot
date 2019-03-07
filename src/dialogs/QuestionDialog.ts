@@ -20,10 +20,12 @@ import lang from '../lang';
 import QueryResponse from '../models/QueryResponse';
 import CorrectConceptPrompt from './CorrectConceptPrompt';
 import { ConfirmTypes } from '../models/ConfirmTypes';
-import { readFileSync } from 'fs';
+import { readFileSync, createReadStream } from 'fs';
 import { ChannelId } from '../models/ChannelIds';
 import { FacebookCardBuilder, FacebookCard } from '../models/FacebookCard';
-import axios from 'axios';
+import nodeFetch from 'node-fetch';
+import * as FormData from 'form-data';
+import * as path from 'path';
 
 export default class QuestionDialog extends WaterfallDialog {
   public static readonly ID = 'question_dialog';
@@ -192,19 +194,28 @@ export default class QuestionDialog extends WaterfallDialog {
 
     // TODO: split fb and other channels
     if (dialogContext.context.activity.channelId === ChannelId.Facebook) {
-      const url = `${process.env.API_URL}/static/${ret.filename}`;
-      console.log(url);
-      return await dialogContext.context.sendActivity({
-        channelData: {
-          attachment: {
-            type: 'file',
-            payload: {
-              url,
-              is_reusable: true,
+      const fd = new FormData();
+      fd.append(
+        'file',
+        createReadStream(
+          path.resolve(__dirname, '..', '..', 'downloads', ret.filename),
+        ),
+      );
+      return nodeFetch('http://file.io/?expires=1d', { method: 'POST' })
+        .then(async res => res.json())
+        .then(async res => {
+          return await dialogContext.context.sendActivity({
+            channelData: {
+              attachment: {
+                type: 'file',
+                payload: {
+                  url: res.link,
+                  is_reusable: true,
+                },
+              },
             },
-          },
-        },
-      });
+          });
+        });
     }
     const reply = {
       type: ActivityTypes.Message,
