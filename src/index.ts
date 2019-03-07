@@ -156,6 +156,7 @@ server.get(
   '/static/*',
   restify.plugins.serveStatic({
     directory: path.resolve(__dirname, '..', 'downloads'),
+    appendRequestPath: false,
   }),
 );
 

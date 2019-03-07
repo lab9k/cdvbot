@@ -192,12 +192,14 @@ export default class QuestionDialog extends WaterfallDialog {
 
     // TODO: split fb and other channels
     if (dialogContext.context.activity.channelId === ChannelId.Facebook) {
+      const url = `${process.env.API_URL}/static/${ret.filename}`;
+      console.log(url);
       return await dialogContext.context.sendActivity({
         channelData: {
           attachment: {
             type: 'file',
             payload: {
-              url: `${process.env.API_URL}/static/${ret.filename}`,
+              url,
               is_reusable: true,
             },
           },
