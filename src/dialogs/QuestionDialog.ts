@@ -193,13 +193,11 @@ export default class QuestionDialog extends WaterfallDialog {
     if (dialogContext.context.activity.channelId === ChannelId.Facebook) {
       return await dialogContext.context.sendActivity({
         channelData: {
-          message: {
-            attachment: {
-              type: 'file',
-              payload: {
-                url: `data:${ret.contentType};base64,${base64file}`,
-                is_reusable: true,
-              },
+          attachment: {
+            type: 'image',
+            payload: {
+              url: 'http://www.messenger-rocks.com/image.jpg',
+              is_reusable: true,
             },
           },
         },
