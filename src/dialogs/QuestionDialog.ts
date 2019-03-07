@@ -192,22 +192,23 @@ export default class QuestionDialog extends WaterfallDialog {
 
     const filedata = readFileSync(`./downloads/${ret.filename}`);
     const base64file = Buffer.from(filedata).toString('base64');
-    const filePath = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      'downloads',
-      ret.filename,
-    );
-    console.log(filePath);
+
     // TODO: split fb and other channels
     if (dialogContext.context.activity.channelId === ChannelId.Facebook) {
+      const filePath = path.resolve(
+        __dirname,
+        '..',
+        '..',
+        'downloads',
+        ret.filename,
+      );
+      console.log(filePath);
       const fd = new FormData();
-
       fd.append('file', createReadStream(filePath), { filename: ret.filename });
       return nodeFetch('http://file.io/?expires=1d', { method: 'POST' })
         .then(async res => res.json())
         .then(async res => {
+          console.log(res);
           await dialogContext.context.sendActivity(
             'Ik stuur je de downloadlink onmiddelijk door.',
           );
