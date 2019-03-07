@@ -116,14 +116,14 @@ export default class QuestionDialog extends WaterfallDialog {
           sortBy(resolved.documents, 'scoreInPercent').reverse(),
           document => {
             return CardFactory.heroCard(
-              'title',
-              'text',
+              `${take(document.content.split(' '), 5).join(' ')}...`,
+              `${take(document.content.split(' '), 20).join(' ')}...`,
               [],
               [
                 {
                   value: { content: document.resourceURI },
                   type: ActionTypes.PostBack,
-                  title: 'title of doc',
+                  title: 'download document',
                 },
               ],
             );
@@ -208,31 +208,10 @@ export default class QuestionDialog extends WaterfallDialog {
       return nodeFetch('http://file.io/?expires=1d', { method: 'POST' })
         .then(async res => res.json())
         .then(async res => {
-          // return await dialogContext.context.sendActivity({
-          //   channelData: {
-          //     attachment: {
-          //       type: 'file',
-          //       payload: {
-          //         url: res.link,
-          //         is_reusable: false,
-          //       },
-          //     },
-          //   },
-          // });
-          console.log('res.link : ', res.link);
-          const reply: Partial<Activity> = {
-            type: ActivityTypes.Message,
-            attachments: [
-              {
-                name: ret.filename,
-                contentUrl: res.link,
-                contentType: ret.contentType,
-                thumbnailUrl:
-                  'https://stad.gent/sites/all/themes/contrib/gent_base/img/png/logo--part1.png',
-              },
-            ],
-          };
-          return await dialogContext.context.sendActivity(reply);
+          await dialogContext.context.sendActivity(
+            'Je kan de file downloaden op de volgende pagina',
+          );
+          return await dialogContext.context.sendActivity(`${res.link}`);
         });
     }
     const reply = {
