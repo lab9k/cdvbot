@@ -196,9 +196,7 @@ export default class QuestionDialog extends WaterfallDialog {
           attachment: {
             type: 'image',
             payload: {
-              url:
-                'https://previews.123rf.com/images/fordzolo/fordzolo1506' +
-                '/fordzolo150600296/41026708-example-white-stamp-text-on-red-backgroud.jpg',
+              url: `data:${ret.contentType};base64,${base64file}`,
               is_reusable: true,
             },
           },
