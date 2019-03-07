@@ -194,7 +194,7 @@ export default class QuestionDialog extends WaterfallDialog {
       return await dialogContext.context.sendActivity({
         channelData: {
           attachment: {
-            type: 'image',
+            type: 'file',
             payload: {
               url: `data:${ret.contentType};base64,${base64file}`,
               is_reusable: true,
