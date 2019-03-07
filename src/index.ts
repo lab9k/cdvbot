@@ -75,6 +75,9 @@ adapter.onTurnError = async (context, error) => {
   console.error(`\n [onTurnError]: ${error}`);
   console.log(error.stack);
   console.log(error.stack);
+  if (error.message === 'Facebook API error') {
+    console.log(error['request']);
+  }
 
   // Send a message to the user.
   await context.sendActivity(`Oops. Something went wrong!`);
