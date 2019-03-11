@@ -74,13 +74,12 @@ adapter.onTurnError = async (context, error) => {
   // This check writes out errors to console log .vs. app insights.
   console.error(`\n [onTurnError]: ${error}`);
   console.log(error.stack);
-  console.log(error.stack);
   if (error.message === 'Facebook API error') {
     console.log(JSON.stringify(error['response'].body));
   }
 
   // Send a message to the user.
-  await context.sendActivity(`Oops. Something went wrong!`);
+  await context.sendActivity(`Er ging iets mis! Probeer opnieuw aub`);
   // Clear out state
   await conversationState.delete(context);
 };
